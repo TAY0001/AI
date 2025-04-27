@@ -12,7 +12,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import GradientBoostingClassifier
 from imblearn.over_sampling import SMOTE
-import joblib
+from joblib import load
 
 # --- Functions ---
 
@@ -29,19 +29,19 @@ def evaluate_model(model, X_test, y_test, threshold=0.5):
 def get_model(model_option):
     if model_option == "Random Forest":
         model = RandomForestClassifier(random_state=42)
-        rf = joblib.load('random_forest_model.joblib')
+        rf = joblib.load('AI/random_forest_model.joblib')
         return rf
     elif model_option == "Gradient Boosting Classifier":
         model = GradientBoostingClassifier(random_state=42)
-        gbc = joblib.load('gradient_boosting_model.joblib')
+        gbc = joblib.load('AI/gradient_boosting_model.joblib')
         return gbc
     elif model_option == "Naive Bayes":
         model = GaussianNB(priors=[0.5, 0.5])
-        gaussian_nb_loaded = joblib.load('gaussian_nb_model.joblib')
+        gaussian_nb_loaded = joblib.load('AI/gaussian_nb_model.joblib')
         return gaussian_nb_loaded
     elif model_option == "XGBoost":
         model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
-        xgb_classifier_loaded = joblib.load('xgb_classifier_model.joblib')
+        xgb_classifier_loaded = joblib.load('AI/xgb_classifier_model.joblib')
         return xgb_classifier_loaded
     return model
 
