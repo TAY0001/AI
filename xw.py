@@ -54,7 +54,7 @@ else:
     loan_percent_income = 0.0
 
 st.sidebar.number_input(
-    "Loan Percent Income (%)",
+    "Loan Percent Income",
     value=loan_percent_income,
     format="%.2f",
     disabled=True
