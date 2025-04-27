@@ -10,10 +10,9 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import GradientBoostingClassifier
-from joblib import load
+import joblib
 
 # --- Functions ---
-import os
 
 def evaluate_model(model, X_test, y_test, threshold=0.5):
     y_prob = model.predict_proba(X_test)[:, 1]
@@ -44,15 +43,15 @@ model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "Gradient 
 
 # Get Model
 if model_option == "Random Forest":
-    model = load('random_forest_model.joblib')
+    model = joblib.load('random_forest_model.joblib')
 elif model_option == "Gradient Boosting Classifier":
-    model2 = GradientBoostingClassifier(random_state=42)
+    model = GradientBoostingClassifier(random_state=42)
     model = joblib.load('gradient_boosting_model.joblib')
 elif model_option == "Naive Bayes":
-    model3 = GaussianNB(priors=[0.5, 0.5])
+    model = GaussianNB(priors=[0.5, 0.5])
     model = joblib.load('gaussian_nb_model.joblib')
 elif model_option == "XGBoost":
-    model4 = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+    model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
     model = joblib.load('xgb_classifier_model.joblib')
 
 # Predict Probabilities
