@@ -32,7 +32,7 @@ def get_model(model_option):
         rf = load('random_forest_model.joblib')
         return rf
     elif model_option == "Gradient Boosting Classifier":
-        model = SVC(probability=True, random_state=42)
+        model = GradientBoostingClassifier(random_state=42)
         gbc = load('gradient_boosting_model.joblib')
         return gbc
     elif model_option == "Naive Bayes":
