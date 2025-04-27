@@ -3,7 +3,7 @@ import joblib
 import numpy as np
 
 # Load the model
-model = joblib.load('credit_risk(1).joblib')
+model = joblib.load('credit_risk (1).joblib')
 
 # Streamlit app
 st.title("Credit Risk Prediction Dashboard")
