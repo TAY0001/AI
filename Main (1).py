@@ -13,7 +13,12 @@ from sklearn.ensemble import GradientBoostingClassifier
 from joblib import load
 
 # --- Functions ---
+import os
 
+if os.path.exists('random_forest_model.joblib'):
+    model = joblib.load('random_forest_model.joblib')
+else:
+    print("Model file not found.")
 def evaluate_model(model, X_test, y_test, threshold=0.5):
     y_prob = model.predict_proba(X_test)[:, 1]
     y_pred = (y_prob >= threshold).astype(int)
