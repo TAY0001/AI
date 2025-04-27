@@ -24,7 +24,13 @@ if person_income > 0:
     loan_percent_income = (loan_amnt / person_income) * 100
 else:
     loan_percent_income = 0.0
-st.sidebar.write(f"Loan Percent Income: {loan_percent_income:.2f}%")
+
+st.sidebar.number_input(
+    "Loan Percent Income (%)",
+    value=loan_percent_income,
+    format="%.2f",
+    disabled=True
+)
 cb_person_cred_hist_length = st.sidebar.number_input("Credit History Length (Years)", min_value=0, value=10, step=1)
 
 if loan_amnt == 0 and loan_percent_income != 0:
