@@ -11,7 +11,7 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.decomposition import PCA
 
-@st.cache_data
+@st.cache_resource
 def load_data():
     df = pd.read_csv(r"C:\Users\admin\Desktop\credit_risk_dataset.csv")
     return df
