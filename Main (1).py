@@ -13,7 +13,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import GradientBoostingClassifier
 from imblearn.over_sampling import SMOTE
 from joblib import load
-import os
 
 # --- Functions ---
 
@@ -59,7 +58,7 @@ st.title("🏦 Credit Risk Prediction Dashboard")
 
 # Sidebar - Settings
 st.sidebar.header("🔍 Model and Input Settings")
-model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "SVM", "Naive Bayes", "XGBoost"])
+model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "Gradient Boosting Classifier", "Naive Bayes", "XGBoost"])
 
 # Get Model
 model = get_model(model_option)
