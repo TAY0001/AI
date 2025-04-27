@@ -26,24 +26,7 @@ def evaluate_model(model, X_test, y_test, threshold=0.5):
     roc_auc = roc_auc_score(y_test, y_prob)
     return accuracy, precision, recall, f1, roc_auc, y_pred, y_prob
 
-def get_model(model_option):
-    if model_option == "Random Forest":
-        model = RandomForestClassifier(random_state=42)
-        rf = joblib.load("random_forest_model.joblib")
-        return rf
-    elif model_option == "Gradient Boosting Classifier":
-        model = GradientBoostingClassifier(random_state=42)
-        gbc = joblib.load('gradient_boosting_model.joblib')
-        return gbc
-    elif model_option == "Naive Bayes":
-        model = GaussianNB(priors=[0.5, 0.5])
-        gaussian_nb_loaded = joblib.load('gaussian_nb_model.joblib')
-        return gaussian_nb_loaded
-    elif model_option == "XGBoost":
-        model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
-        xgb_classifier_loaded = joblib.load('xgb_classifier_model.joblib')
-        return xgb_classifier_loaded
-    return model
+
 
 def find_optimal_threshold(y_true, y_prob):
     fpr, tpr, thresholds = roc_curve(y_true, y_prob)
@@ -61,7 +44,18 @@ st.sidebar.header("🔍 Model and Input Settings")
 model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "Gradient Boosting Classifier", "Naive Bayes", "XGBoost"])
 
 # Get Model
-model = get_model(model_option)
+if model_option == "Random Forest":
+    model1 = RandomForestClassifier(random_state=42)
+    model = joblib.load('random_forest_model.joblib')
+elif model_option == "Gradient Boosting Classifier":
+    model2 = GradientBoostingClassifier(random_state=42)
+    model = joblib.load('gradient_boosting_model.joblib')
+elif model_option == "Naive Bayes":
+    model3 = GaussianNB(priors=[0.5, 0.5])
+    model = joblib.load('gaussian_nb_model.joblib')
+elif model_option == "XGBoost":
+    model4 = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+    model = joblib.load('xgb_classifier_model.joblib')
 model.fit(X_train, y_train)
 
 # Predict Probabilities
