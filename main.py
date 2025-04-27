@@ -3,7 +3,11 @@ import joblib
 import numpy as np
 
 # Load the model
-model = joblib.load('credit_risk (1).joblib')
+try:
+    model = joblib.load('credit_risk (1).joblib')
+except Exception as e:
+    st.error(f"Failed to load model: {e}")
+    st.stop()
 
 # Streamlit app
 st.title("Credit Risk Prediction Dashboard")
@@ -49,38 +53,54 @@ if st.sidebar.checkbox("Include Loan Intent"):
     for intent in loan_intent_options:
         optional_features[f'loan_intent_{intent}'] = 1 if intent == selected_intent else 0
 
-# Prepare features for prediction
+# Prepare features for prediction - ensure the order matches what the model expects
 important_features = [
-    loan_percent_income,
-    loan_int_rate,
-    person_income,
-    loan_amnt,
-    person_emp_length,
     person_age,
+    person_income,
+    person_emp_length,
+    loan_amnt,
+    loan_int_rate,
+    loan_percent_income,
     cb_person_cred_hist_length
 ]
 
 # Combine important and optional features
 feature_inputs = important_features + list(optional_features.values())
 
+# Debugging: Show the feature inputs
+if st.sidebar.checkbox("Show feature inputs"):
+    st.write("Feature inputs:", feature_inputs)
+    st.write("Feature names:", model.feature_names_in_ if hasattr(model, 'feature_names_in_') else "Feature names not available")
+
 # Prediction
 if st.sidebar.button("Predict Credit Risk"):
-    features_array = np.array([feature_inputs])
+    features_array = np.array([feature_inputs]).reshape(1, -1)
+    
     try:
+        # Debug: Print feature array shape
+        st.write("Feature array shape:", features_array.shape)
+        
         prediction = model.predict(features_array)
         probabilities = model.predict_proba(features_array)
         
         st.subheader("Prediction Result")
+        # Note: Some models use 0 for high risk and 1 for low risk, or vice versa
+        # You may need to adjust this based on your model's class labeling
         if prediction[0] == 1:
-            st.success("High Risk")
+            st.error("High Risk (Predicted class: 1)")
         else:
-            st.success("Low Risk")
+            st.success("Low Risk (Predicted class: 0)")
         
         st.subheader("Prediction Probabilities")
-        st.write(f"Low Risk Probability: {probabilities[0][0] * 100:.2f}%")
-        st.write(f"High Risk Probability: {probabilities[0][1] * 100:.2f}%")
+        st.write(f"Probability of class 0: {probabilities[0][0] * 100:.2f}%")
+        st.write(f"Probability of class 1: {probabilities[0][1] * 100:.2f}%")
         
-    except ValueError as e:
+        # Additional debug info
+        st.subheader("Model Information")
+        st.write(f"Model classes: {model.classes_ if hasattr(model, 'classes_') else 'Not available'}")
+        
+    except Exception as e:
         st.error(f"Prediction failed: {e}")
+        st.write("Feature inputs that caused the error:", feature_inputs)
 
 st.markdown("\n**Note:** This is a demo app. The prediction is based on the input features and model logic.")
