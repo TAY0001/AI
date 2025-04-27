@@ -12,7 +12,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.decomposition import PCA
 
 # Using st.cache_data for caching the data loading function
-@st.cache_data
+@st.cache_resource
 def load_data():
     df = pd.read_csv("credit_risk_dataset.csv")
     return df
