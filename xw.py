@@ -46,13 +46,23 @@ model_option = st.selectbox("Select a model", ["Random Forest", "SVM", "Naive Ba
 st.subheader("Enter the features for prediction")
 
 
-person_age = st.number_input("Person Age", min_value=0, max_value=100, value=30)
-person_income = st.number_input("Person Income", min_value=0, value=50000)
-person_emp_length = st.number_input("Person Employment Length (in years)", min_value=0, max_value=50, value=5)
-loan_amnt = st.number_input("Loan Amount", min_value=0, value=10000)
-loan_int_rate = st.number_input("Loan Interest Rate (%)", min_value=0.0, max_value=100.0, value=5.0)
-loan_percent_income = st.number_input("Loan Percent of Income (%)", min_value=0.0, max_value=100.0, value=10.0)
-cb_person_cred_hist_length = st.number_input("Credit History Length (in years)", min_value=0, max_value=50, value=10)
+person_age = st.number_input("Person Age", min_value=0, max_value=100, value=18)
+person_income = st.number_input("Person Income", min_value=0, value=0)
+person_emp_length = st.number_input("Person Employment Length (in years)", min_value=0, max_value=50, value=0)
+loan_amnt = st.number_input("Loan Amount", min_value=0, value=0)
+loan_int_rate = st.number_input("Loan Interest Rate (%)", min_value=0.0, max_value=100.0, value=0.0)
+if person_income > 0:
+    loan_percent_income = (loan_amnt / person_income) * 100
+else:
+    loan_percent_income = 0.0
+
+st.sidebar.number_input(
+    "Loan Percent Income (%)",
+    value=loan_percent_income,
+    format="%.2f",
+    disabled=True
+)
+cb_person_cred_hist_length = st.sidebar.number_input("Credit History Length (Years)", min_value=0, value=0, step=1)
 
 
 input_data = pd.DataFrame({
