@@ -54,7 +54,7 @@ elif model_option == "XGBoost":
     model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
     model = joblib.load('xgb_classifier_model.joblib')
 
-X_test = np.random.rand(100, 8)  # Example test data (adjust based on your actual feature size)
+X_test = np.random.rand(100, 10)  # Example test data (adjust based on your actual feature size)
 y_test = np.random.randint(0, 2, 100) 
 
 # Predict Probabilities
