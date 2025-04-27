@@ -45,7 +45,6 @@ model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "Gradient 
 # Get Model
 if model_option == "Random Forest":
     model1 = RandomForestClassifier(random_state=42)
-    model.fit(X_train, y_train)
     joblib.dump(model, 'random_forest_model.joblib')
 elif model_option == "Gradient Boosting Classifier":
     model2 = GradientBoostingClassifier(random_state=42)
