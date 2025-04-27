@@ -12,6 +12,9 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.decomposition import PCA
 import joblib
+import requests
+from io import BytesIO
+import zipfile
 import os
 
 # --- Functions ---
@@ -46,10 +49,25 @@ st.title("🏦 Credit Risk Prediction Dashboard")
 st.sidebar.header("🔍 Model and Input Settings")
 model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "Gradient Boosting Classifier", "Naive Bayes", "XGBoost"])
 
+url = 'https://github.com/TAY0001/AI/blob/main/random_forest_model.zip'
+response = requests.get(url)
 # Get Model
 if model_option == "Random Forest":
-    model = RandomForestClassifier(random_state=42)
-    model = joblib.load('random_forest_model.joblib')
+    # model = RandomForestClassifier(random_state=42)
+    # model = joblib.load('random_forest_model.joblib')
+    if response.status_code == 200:
+        # Step 2: Load the ZIP file into memory
+        with BytesIO(response.content) as zip_file:
+            with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+                # Step 3: Extract the model file from the ZIP
+                model_filename = '<your_model_file.joblib>'  # Name of the model file inside the ZIP
+                with zip_ref.open(model_filename) as model_file:
+                    # Step 4: Load the model from the extracted file
+                    model = joblib.load(model_file)
+    
+        print("Model loaded successfully!")
+    else:
+        print("Failed to download the file")
 elif model_option == "Gradient Boosting Classifier":
     model = GradientBoostingClassifier(random_state=42)
     model = joblib.load('gradient_boosting_model.joblib')
