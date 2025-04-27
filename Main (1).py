@@ -11,7 +11,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import GradientBoostingClassifier
 from imblearn.over_sampling import SMOTE
-import joblib
 from joblib import load
 
 # --- Functions ---
@@ -103,10 +102,6 @@ input_data = pd.DataFrame({
     'loan_percent_income': [loan_percent_income],
     'cb_person_cred_hist_length': [cb_person_cred_hist_length],
 })
-
-input_data_scaled = scaler.transform(input_data)
-if apply_pca:
-    input_data_scaled = pca.transform(input_data_scaled)
 
 # Prediction
 if submit_button:
