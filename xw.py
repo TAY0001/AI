@@ -11,6 +11,7 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.decomposition import PCA
 
+# Using st.cache_data for caching the data loading function
 @st.cache_data
 def load_data():
     df = pd.read_csv("credit_risk_dataset.csv")
@@ -36,15 +37,11 @@ def evaluate_model(model, X_test, y_test):
     
     return accuracy, precision, recall, f1, roc_auc
 
-
 st.title("Model Comparison Dashboard")
-
 
 model_option = st.selectbox("Select a model", ["Random Forest", "SVM", "Naive Bayes"])
 
-
 st.subheader("Enter the features for prediction")
-
 
 person_age = st.number_input("Person Age", min_value=0, max_value=100, value=18)
 person_income = st.number_input("Person Income", min_value=0, value=0)
@@ -63,7 +60,6 @@ st.sidebar.number_input(
     disabled=True
 )
 cb_person_cred_hist_length = st.sidebar.number_input("Credit History Length (Years)", min_value=0, value=0, step=1)
-
 
 input_data = pd.DataFrame({
     'person_age': [person_age],
