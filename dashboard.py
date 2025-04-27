@@ -15,7 +15,7 @@ import joblib
 
 
 # Load dataset
-model = joblib.load('credit_risk.joblib')
+model = joblib.load('credit_risk (1).joblib')
 
 # Split the data into features and target
 X = df.drop(columns=['loan_status'], axis=1)
