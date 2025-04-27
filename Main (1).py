@@ -13,6 +13,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from imblearn.over_sampling import SMOTE
 import joblib
 from joblib import load
+import os
 
 # --- Functions ---
 print("Current Working Directory:", os.getcwd())
