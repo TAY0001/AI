@@ -79,6 +79,13 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
+# Sidebar - PCA Setting
+apply_pca = st.sidebar.checkbox("Apply PCA (Dimensionality Reduction)", value=False)
+
+# PCA Mode (optional: Manual or Auto)
+if apply_pca:
+    pca_mode = st.sidebar.selectbox("Select PCA Mode", ["Manual", "Auto"])
+
 # Apply PCA if selected
 if apply_pca:
     if pca_mode == "Manual":
