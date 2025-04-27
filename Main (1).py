@@ -89,6 +89,7 @@ if apply_pca:
 # Apply PCA if selected
 if apply_pca:
     if pca_mode == "Manual":
+        n_components = st.sidebar.slider("Number of PCA Components", 1, X_train.shape[1], value=2)
         pca = PCA(n_components=n_components)
     else:  # Auto (keep 95% variance)
         pca = PCA(n_components=0.95)
