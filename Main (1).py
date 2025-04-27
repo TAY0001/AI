@@ -12,13 +12,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from imblearn.over_sampling import SMOTE
+from joblib import load
 
 # --- Functions ---
-
-@st.cache_data
-def load_data():
-    df = pd.read_csv("credit_risk_dataset.csv")
-    return df
 
 def evaluate_model(model, X_test, y_test, threshold=0.5):
     y_prob = model.predict_proba(X_test)[:, 1]
@@ -33,12 +29,20 @@ def evaluate_model(model, X_test, y_test, threshold=0.5):
 def get_model(model_option):
     if model_option == "Random Forest":
         model = RandomForestClassifier(random_state=42)
-    elif model_option == "SVM":
+        rf = load('random_forest_model.joblib')
+        prediction_rf = rf.predict(X_test)
+    elif model_option == "Gradient Boosting Classifier":
         model = SVC(probability=True, random_state=42)
+        gbc = load('gradient_boosting_model.joblib')
+        prediction_gbc = gbc.predict(X_test)
     elif model_option == "Naive Bayes":
         model = GaussianNB(priors=[0.5, 0.5])
+        gaussian_nb_loaded = load('gaussian_nb_model.joblib')
+        prediction_nb = gaussian_nb_loaded.predict(X_test)
     elif model_option == "XGBoost":
         model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+        xgb_classifier_loaded = load('xgb_classifier_model.joblib')
+        prediction_xgb = xgb_classifier_loaded.predict(X_test)
     return model
 
 def find_optimal_threshold(y_true, y_prob):
