@@ -15,7 +15,7 @@ from imblearn.over_sampling import SMOTE
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv("credit_risk_dataset (1).csv")
+    df = pd.read_csv("credit_risk_dataset.csv")
     return df
 
 def evaluate_model(model, X_test, y_test):
