@@ -92,9 +92,6 @@ with st.sidebar.form(key="input_form"):
     cb_person_cred_hist_length = st.sidebar.number_input("Credit History Length (Years)", min_value=0, value=10, step=1)
     submit_button = st.form_submit_button(label="Predict")
 
-model = joblib.load('random_forest_model.joblib')
-scaler = joblib.load('scaler.joblib')
-
 # Prepare Input
 input_data = pd.DataFrame({
     'person_age': [person_age],
