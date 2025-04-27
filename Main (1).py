@@ -11,6 +11,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import GradientBoostingClassifier
 import joblib
+import joblib
+import sklearn
+
+print("joblib version:", joblib.__version__)
+print("scikit-learn version:", sklearn.__version__)
+
 
 # --- Functions ---
 import os
