@@ -95,8 +95,8 @@ if apply_pca:
     X_train = pca.fit_transform(X_train)
     X_test = pca.transform(X_test)
 
-# Get Model
-model = get_model(model_option)
+
+
 model.fit(X_train, y_train)
     
 # Predict Probabilities
