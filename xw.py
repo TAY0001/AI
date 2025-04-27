@@ -13,7 +13,7 @@ from sklearn.decomposition import PCA
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv(r"F:\Degree\Y2S2\Artificial Intelligence\credit_risk_dataset.csv")
+    df = pd.read_csv("credit_risk_dataset.csv")
     return df
 
 df = load_data()
