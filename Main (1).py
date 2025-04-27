@@ -30,7 +30,7 @@ def evaluate_model(model, X_test, y_test, threshold=0.5):
 def get_model(model_option):
     if model_option == "Random Forest":
         model = RandomForestClassifier(random_state=42)
-        rf = joblib.load('/mount/src/ai/random_forest_model.joblib')
+        rf = joblib.load('mount/src/ai/random_forest_model.joblib')
         return rf
     elif model_option == "Gradient Boosting Classifier":
         model = GradientBoostingClassifier(random_state=42)
