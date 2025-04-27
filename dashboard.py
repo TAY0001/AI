@@ -12,7 +12,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.decomposition import PCA
 import joblib
 
-model = joblib.load("C:\Users\User\Downloads\AI.joblib")
+model = joblib.load(r"C:\Users\User\Downloads\AI.joblib")
 
 # Load dataset
 @st.cache
