@@ -25,8 +25,6 @@ def evaluate_model(model, X_test, y_test, threshold=0.5):
     roc_auc = roc_auc_score(y_test, y_prob)
     return accuracy, precision, recall, f1, roc_auc, y_pred, y_prob
 
-
-
 def find_optimal_threshold(y_true, y_prob):
     fpr, tpr, thresholds = roc_curve(y_true, y_prob)
     youdens_j = tpr - fpr
@@ -55,6 +53,9 @@ elif model_option == "Naive Bayes":
 elif model_option == "XGBoost":
     model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
     model = joblib.load('xgb_classifier_model.joblib')
+
+X_test = np.random.rand(100, 8)  # Example test data (adjust based on your actual feature size)
+y_test = np.random.randint(0, 2, 100) 
 
 # Predict Probabilities
 accuracy_default, precision_default, recall_default, f1_default, roc_auc_default, y_test_pred_default, y_prob = evaluate_model(model, X_test, y_test, 0.5)
