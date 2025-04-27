@@ -12,15 +12,10 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.decomposition import PCA
 import joblib
 
-model = joblib.load(r"C:\Users\User\Downloads\AI.joblib")
+
 
 # Load dataset
-@st.cache
-def load_data():
-    df = pd.read_csv(r"C:\Users\admin\Desktop\credit_risk_dataset.csv")
-    return df
-
-df = load_data()
+model = joblib.load('credit_risk.joblib')
 
 # Split the data into features and target
 X = df.drop(columns=['loan_status'], axis=1)
