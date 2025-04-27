@@ -30,19 +30,19 @@ def get_model(model_option):
     if model_option == "Random Forest":
         model = RandomForestClassifier(random_state=42)
         rf = load('random_forest_model.joblib')
-        prediction_rf = rf.predict(X_test)
+        return rf
     elif model_option == "Gradient Boosting Classifier":
         model = SVC(probability=True, random_state=42)
         gbc = load('gradient_boosting_model.joblib')
-        prediction_gbc = gbc.predict(X_test)
+        return gbc
     elif model_option == "Naive Bayes":
         model = GaussianNB(priors=[0.5, 0.5])
         gaussian_nb_loaded = load('gaussian_nb_model.joblib')
-        prediction_nb = gaussian_nb_loaded.predict(X_test)
+        return gaussian_nb_loaded
     elif model_option == "XGBoost":
         model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
         xgb_classifier_loaded = load('xgb_classifier_model.joblib')
-        prediction_xgb = xgb_classifier_loaded.predict(X_test)
+        return xgb_classifier_loaded
     return model
 
 def find_optimal_threshold(y_true, y_prob):
