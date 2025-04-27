@@ -44,7 +44,7 @@ model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "Gradient 
 # Get Model
 if model_option == "Random Forest":
     model1 = RandomForestClassifier(random_state=42)
-    model = load('/mpunt/src/ai/random_forest_model.joblib')
+    model = load('/mount/src/ai/random_forest_model.joblib')
 elif model_option == "Gradient Boosting Classifier":
     model2 = GradientBoostingClassifier(random_state=42)
     model = joblib.load('gradient_boosting_model.joblib')
