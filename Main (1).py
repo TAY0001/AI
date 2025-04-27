@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix, roc_curve
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -29,7 +28,7 @@ def evaluate_model(model, X_test, y_test, threshold=0.5):
 def get_model(model_option):
     if model_option == "Random Forest":
         model = RandomForestClassifier(random_state=42)
-        rf = joblib.load('main/AI/random_forest_model.joblib')
+        rf = joblib.load("AI/random_forest_model.joblib")
         return rf
     elif model_option == "Gradient Boosting Classifier":
         model = GradientBoostingClassifier(random_state=42)
