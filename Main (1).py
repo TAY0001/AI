@@ -12,8 +12,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import GradientBoostingClassifier
 from imblearn.over_sampling import SMOTE
-from joblib import load
-import os
+import joblib
 
 # --- Functions ---
 
