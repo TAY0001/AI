@@ -11,13 +11,13 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.decomposition import PCA
 
-# Using st.cache_data for caching the data loading function
-@st.cache_resource
-def load_data():
-    df = pd.read_csv("credit_risk_dataset.csv")
-    return df
+# Allow user to upload dataset through Streamlit's file uploader
+uploaded_file = st.file_uploader("Upload Credit Risk Dataset", type=["csv"])
 
-df = load_data()
+if uploaded_file is not None:
+    df = pd.read_csv("credit_risk_dataset.csv")
+else:
+    st.warning("Please upload a dataset")
 
 X = df.drop(columns=['loan_status'], axis=1)
 y = df['loan_status']
