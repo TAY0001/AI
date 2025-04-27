@@ -19,6 +19,10 @@ loan_int_rate = st.sidebar.number_input("Loan Interest Rate (%)", min_value=0.0,
 loan_percent_income = st.sidebar.number_input("Loan Percent Income (%)", min_value=0.0, max_value=100.0, value=20.0)
 cb_person_cred_hist_length = st.sidebar.number_input("Credit History Length (Years)", min_value=0, value=10, step=1)
 
+if loan_amnt == 0 and loan_percent_income != 0:
+    st.sidebar.warning("Loan amount is 0, so Loan Percent Income is automatically set to 0.")
+    loan_percent_income = 0.0
+
 # Optional features with default values
 st.sidebar.subheader("Optional Features")
 optional_features = {
