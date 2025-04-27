@@ -42,10 +42,8 @@ model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "Gradient 
 
 # Get Model
 if model_option == "Random Forest":
+    model = RandomForestClassifier(random_state=42)
     model = joblib.load('random_forest_model.joblib')
-    scaler = joblib.load('scaler.joblib')
-    # model = RandomForestClassifier(random_state=42)
-    # model = joblib.load('random_forest_model.joblib')
 elif model_option == "Gradient Boosting Classifier":
     model = GradientBoostingClassifier(random_state=42)
     model = joblib.load('gradient_boosting_model.joblib')
@@ -55,10 +53,7 @@ elif model_option == "Naive Bayes":
 elif model_option == "XGBoost":
     model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
     model = joblib.load('xgb_classifier_model.joblib')
-
-X_test = np.random.rand(100, 7)  # Example test data (adjust based on your actual feature size)
-y_test = np.random.randint(0, 2, 100) 
-
+    
 # Predict Probabilities
 accuracy_default, precision_default, recall_default, f1_default, roc_auc_default, y_test_pred_default, y_prob = evaluate_model(model, X_test, y_test, 0.5)
 
