@@ -1,92 +1,145 @@
 import streamlit as st
-import joblib
 import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix, roc_curve
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from imblearn.over_sampling import SMOTE
 
-# Load the model
-model = joblib.load('credit_risk (1).joblib')
+# --- Functions ---
 
-# Streamlit app
-st.title("Credit Risk Prediction Dashboard")
+@st.cache_data
+def load_data():
+    df = pd.read_csv("credit_risk_dataset (1).csv")
+    return df
 
-st.sidebar.header("User Input Features")
+def evaluate_model(model, X_test, y_test):
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred)
+    roc_auc = roc_auc_score(y_test, y_pred)
+    return accuracy, precision, recall, f1, roc_auc, y_pred
 
-# Collect important features in the sidebar
-person_age = st.sidebar.number_input("Age", min_value=18, max_value=100, value=30, step=1)
-person_income = st.sidebar.number_input("Income ($)", min_value=0.0, value=50000.0)
-person_emp_length = st.sidebar.number_input("Employment Length (Years)", min_value=0, value=5, step=1)
-loan_amnt = st.sidebar.number_input("Loan Amount ($)", min_value=0.0, value=10000.0)
-loan_int_rate = st.sidebar.number_input("Loan Interest Rate (%)", min_value=0.0, max_value=100.0, value=5.0)
-if person_income > 0:
-    loan_percent_income = (loan_amnt / person_income) * 100
-else:
-    loan_percent_income = 0.0
+def get_model(model_option):
+    if model_option == "Random Forest":
+        model = RandomForestClassifier(random_state=42)
+    elif model_option == "SVM":
+        model = SVC(probability=True, random_state=42)
+    elif model_option == "Naive Bayes":
+        param_grid = {'var_smoothing': np.logspace(-9, -6, 10)}
+        grid_GaussianNB = GridSearchCV(GaussianNB(priors=[0.5, 0.5]), param_grid, cv=5)
+        model = grid_GaussianNB
+    return model
 
-st.sidebar.number_input(
-    "Loan Percent Income (%)",
-    value=loan_percent_income,
-    format="%.2f",
-    disabled=True
+# --- Main App ---
+
+# Title
+st.title("🏦 Credit Risk Prediction Dashboard")
+
+# Sidebar
+st.sidebar.header("🔍 Model and Input Settings")
+model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "SVM", "Naive Bayes"])
+use_smote = st.sidebar.checkbox("Apply SMOTE to Balance Classes (Recommended for Naive Bayes)", value=True)
+
+# Data Loading
+df = load_data()
+df = df.assign(
+    person_emp_length=df['person_emp_length'].fillna(df['person_emp_length'].median()),
+    loan_int_rate=df['loan_int_rate'].fillna(df['loan_int_rate'].median())
 )
-cb_person_cred_hist_length = st.sidebar.number_input("Credit History Length (Years)", min_value=0, value=10, step=1)
 
-# Optional features with default values
-st.sidebar.subheader("Optional Features")
-optional_features = {
-    'person_home_ownership_RENT': 0,
-    'person_home_ownership_OWN': 0,
-    'cb_person_default_on_file_Y': 0,
-    'loan_intent_HOMEIMPROVEMENT': 0,
-    'loan_intent_MEDICAL': 0,
-    'loan_intent_EDUCATION': 0,
-    'loan_intent_PERSONAL': 0,
-    'loan_intent_VENTURE': 0,
-    'person_home_ownership_OTHER': 0
-}
+# Data Split
+X = df.drop(columns=['loan_status'], axis=1)
+X = X.select_dtypes(include=[np.number])
+y = df['loan_status']
 
-if st.sidebar.checkbox("Include Home Ownership (RENT)"):
-    optional_features['person_home_ownership_RENT'] = st.sidebar.number_input("Home Ownership (RENT) (0 or 1)", min_value=0, max_value=1, value=0)
-if st.sidebar.checkbox("Include Home Ownership (OWN)"):
-    optional_features['person_home_ownership_OWN'] = st.sidebar.number_input("Home Ownership (OWN) (0 or 1)", min_value=0, max_value=1, value=0)
-if st.sidebar.checkbox("Include Default on File (Y)"):
-    optional_features['cb_person_default_on_file_Y'] = st.sidebar.number_input("Default on File (Y) (0 or 1)", min_value=0, max_value=1, value=0)
-if st.sidebar.checkbox("Include Loan Intent"):
-    loan_intent_options = ['HOMEIMPROVEMENT', 'MEDICAL', 'EDUCATION', 'PERSONAL', 'VENTURE']
-    selected_intent = st.sidebar.selectbox("Select Loan Intent", loan_intent_options)
-    for intent in loan_intent_options:
-        optional_features[f'loan_intent_{intent}'] = 1 if intent == selected_intent else 0
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Prepare features for prediction
-important_features = [
-    loan_percent_income,
-    loan_int_rate,
-    person_income,
-    loan_amnt,
-    person_emp_length,
-    person_age,
-    cb_person_cred_hist_length
-]
+# Scaling
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 
-# Combine important and optional features
-feature_inputs = important_features + list(optional_features.values())
+# Apply SMOTE if selected
+if use_smote:
+    smote = SMOTE(random_state=42)
+    X_train, y_train = smote.fit_resample(X_train, y_train)
+
+# Get Model
+model = get_model(model_option)
+model.fit(X_train, y_train)
+
+# Evaluate Model
+accuracy, precision, recall, f1, roc_auc, y_test_pred = evaluate_model(model, X_test, y_test)
+
+# Input Form
+st.sidebar.header("📝 Input Features")
+with st.sidebar.form(key="input_form"):
+    person_age = st.number_input("Person Age", min_value=0, max_value=100, value=25)
+    person_income = st.number_input("Person Income", min_value=0, value=50000)
+    person_emp_length = st.number_input("Employment Length (years)", min_value=0, max_value=50, value=5)
+    loan_amnt = st.number_input("Loan Amount", min_value=0, value=10000)
+    loan_int_rate = st.number_input("Loan Interest Rate (%)", min_value=0.0, max_value=100.0, value=5.0)
+    if person_income > 0:
+        loan_percent_income = (loan_amnt / person_income) * 100
+    else:
+        loan_percent_income = 0.0
+    
+    st.sidebar.number_input(
+        "Loan Percent Income (%)",
+        value=loan_percent_income,
+        format="%.2f",
+        disabled=True
+    )
+    cb_person_cred_hist_length = st.number_input("Credit History Length (years)", min_value=0, max_value=50, value=10)
+    submit_button = st.form_submit_button(label="Predict")
+
+# Prepare Input
+input_data = pd.DataFrame({
+    'person_age': [person_age],
+    'person_income': [person_income],
+    'person_emp_length': [person_emp_length],
+    'loan_amnt': [loan_amnt],
+    'loan_int_rate': [loan_int_rate],
+    'loan_percent_income': [loan_percent_income],
+    'cb_person_cred_hist_length': [cb_person_cred_hist_length],
+})
+
+input_data_scaled = scaler.transform(input_data)
 
 # Prediction
-if st.sidebar.button("Predict Credit Risk"):
-    features_array = np.array([feature_inputs])
-    try:
-        prediction = model.predict(features_array)
-        probabilities = model.predict_proba(features_array)
-        
-        st.subheader("Prediction Result")
-        if prediction[0] == 1:
-            st.success("High Risk")
-        else:
-            st.success("Low Risk")
-        
-        st.subheader("Prediction Probabilities")
-        st.write(f"Low Risk Probability: {probabilities[0][0] * 100:.2f}%")
-        st.write(f"High Risk Probability: {probabilities[0][1] * 100:.2f}%")
-        
-    except ValueError as e:
-        st.error(f"Prediction failed: {e}")
+if submit_button:
+    prediction = model.predict(input_data_scaled)
+    probability = model.predict_proba(input_data_scaled)
 
-st.markdown("\n**Note:** This is a demo app. The prediction is based on the input features and model logic.")
+    st.subheader("🔮 Prediction Result")
+    if prediction[0] == 0:
+        st.success("✅ **Low Risk**")
+    else:
+        st.error("⚠️ **High Risk**")
+
+    st.write(f"Low Risk Probability: **{probability[0][0]*100:.2f}%**")
+    st.write(f"High Risk Probability: **{probability[0][1]*100:.2f}%**")
+
+# Show Metrics
+st.subheader(f"📊 {model_option} Model Performance")
+st.table(pd.DataFrame({
+    'Metric': ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'ROC AUC'],
+    'Score': [f"{accuracy:.4f}", f"{precision:.4f}", f"{recall:.4f}", f"{f1:.4f}", f"{roc_auc:.4f}"]
+}))
+
+# Confusion Matrix
+st.subheader("🧩 Confusion Matrix on Test Set")
+cm = confusion_matrix(y_test, y_test_pred)
+fig, ax = plt.subplots()
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=["Low Risk", "High Risk"], yticklabels=["Low Risk", "High Risk"])
+plt.xlabel("Predicted")
+plt.ylabel("True")
+st.pyplot(fig)
