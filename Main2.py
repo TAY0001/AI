@@ -136,8 +136,8 @@ input_data = pd.DataFrame({
 })
 
 input_data_scaled = scaler.transform(input_data)
-if apply_pca:
-    input_data_scaled = pca.transform(input_data_scaled)
+# if apply_pca:
+#     input_data_scaled = pca.transform(input_data_scaled)
 
 # Prediction
 if submit_button:
