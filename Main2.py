@@ -145,10 +145,12 @@ if submit_button:
     prediction = (probability[:,1] >= threshold).astype(int)
 
     st.subheader("Prediction Result")
-    if prediction[0] == 0:
-        st.success(" **Low Risk**")
+    prediction_proba = model.predict_proba(user_input_scaled)[0]
+
+    if prediction_proba[1] >= threshold:
+        prediction_label = "High Risk"
     else:
-        st.error("**High Risk**")
+        prediction_label = "Low Risk"
 
     st.write(f"Low Risk Probability: **{probability[0][0]*100:.2f}%**")
     st.write(f"High Risk Probability: **{probability[0][1]*100:.2f}%**")
