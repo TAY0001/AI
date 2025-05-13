@@ -100,6 +100,8 @@ if apply_pca:
         pca = PCA(n_components=0.95)
     X_train = pca.fit_transform(X_train)
     X_test = pca.transform(X_test)
+
+model.fit(X_train, y_train)
     
 # Predict Probabilities
 accuracy_default, precision_default, recall_default, f1_default, roc_auc_default, y_test_pred_default, y_prob = evaluate_model(model, X_test, y_test, 0.5)
