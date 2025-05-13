@@ -49,8 +49,6 @@ st.title("🏦 Credit Risk Prediction Dashboard")
 st.sidebar.header("🔍 Model and Input Settings")
 model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "Gradient Boosting Classifier", "Naive Bayes", "XGBoost"])
 
-url = 'https://github.com/TAY0001/AI/blob/main/random_forest_model.zip'
-response = requests.get(url)
 # Get Model
 if model_option == "Random Forest":
     model = RandomForestClassifier(random_state=42)
