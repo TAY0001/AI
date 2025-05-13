@@ -54,10 +54,10 @@ st.title("Credit Risk Prediction Dashboard")
 # Sidebar - Settings
 st.sidebar.header("Model and Input Settings")
 model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "Gradient Boosting (GBC)", "Naive Bayes", "XGBoost"])
-apply_pca = st.sidebar.checkbox("Apply PCA", value=True)
-pca_mode = st.sidebar.radio("PCA Mode", ["Manual", "Auto (95% Variance)"])
-if pca_mode == "Manual":
-    n_components = st.sidebar.slider("Number of PCA Components", min_value=2, max_value=10, value=5)
+# apply_pca = st.sidebar.checkbox("Apply PCA", value=True)
+# pca_mode = st.sidebar.radio("PCA Mode", ["Manual", "Auto (95% Variance)"])
+# if pca_mode == "Manual":
+#     n_components = st.sidebar.slider("Number of PCA Components", min_value=2, max_value=10, value=5)
 
 # Load Data
 df = load_data()
@@ -78,14 +78,14 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-# Apply PCA if selected
-if apply_pca:
-    if pca_mode == "Manual":
-        pca = PCA(n_components=n_components)
-    else:  # Auto (keep 95% variance)
-        pca = PCA(n_components=0.95)
-    X_train = pca.fit_transform(X_train)
-    X_test = pca.transform(X_test)
+# # Apply PCA if selected
+# if apply_pca:
+#     if pca_mode == "Manual":
+#         pca = PCA(n_components=n_components)
+#     else:  # Auto (keep 95% variance)
+#         pca = PCA(n_components=0.95)
+#     X_train = pca.fit_transform(X_train)
+#     X_test = pca.transform(X_test)
 
 # Get Model
 model = get_model(model_option)
