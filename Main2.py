@@ -145,7 +145,7 @@ if submit_button:
     prediction = (probability[:,1] >= threshold).astype(int)
 
     st.subheader("Prediction Result")
-    prediction_proba = model.predict_proba(user_input_scaled)[0]
+    prediction_proba = probability[0]
 
     if prediction_proba[1] >= threshold:
         prediction_label = "High Risk"
