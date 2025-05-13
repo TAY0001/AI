@@ -152,6 +152,7 @@ if submit_button:
     else:
         prediction_label = "Low Risk"
 
+    st.markdown(f"Risk Assessment: **{prediction_label}**")
     st.write(f"Low Risk Probability: **{probability[0][0]*100:.2f}%**")
     st.write(f"High Risk Probability: **{probability[0][1]*100:.2f}%**")
     st.write(f"Applied Threshold: **{threshold:.2f}**")
