@@ -83,6 +83,8 @@ with st.sidebar.form(key="input_form"):
     cb_person_cred_hist_length = st.number_input("Credit History Length (years)", min_value=0, max_value=50, value=10)
     submit_button = st.form_submit_button(label="Predict")
 
+train_feature_names = ['person_age', 'person_income', 'person_emp_length', 'loan_amnt', 'loan_int_rate', 'loan_percent_income', 'cb_person_cred_hist_length']
+
 # Prepare Input
 input_data = pd.DataFrame({
     'person_age': [person_age],
@@ -93,6 +95,8 @@ input_data = pd.DataFrame({
     'loan_percent_income': [loan_percent_income],
     'cb_person_cred_hist_length': [cb_person_cred_hist_length],
 })
+
+input_data = input_data[train_feature_names]
 
 # Prediction
 if submit_button:
