@@ -13,21 +13,21 @@ from sklearn.naive_bayes import GaussianNB
 
 # --- Functions ---
 
-def evaluate_model(model, X_test, y_test, threshold=0.5):
-    y_prob = model.predict_proba(X_test)[:, 1]
-    y_pred = (y_prob >= threshold).astype(int)
-    accuracy = accuracy_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred)
-    recall = recall_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred)
-    roc_auc = roc_auc_score(y_test, y_prob)
-    return accuracy, precision, recall, f1, roc_auc, y_pred, y_prob
+# def evaluate_model(model, X_test, y_test, threshold=0.5):
+#     y_prob = model.predict_proba(X_test)[:, 1]
+#     y_pred = (y_prob >= threshold).astype(int)
+#     accuracy = accuracy_score(y_test, y_pred)
+#     precision = precision_score(y_test, y_pred)
+#     recall = recall_score(y_test, y_pred)
+#     f1 = f1_score(y_test, y_pred)
+#     roc_auc = roc_auc_score(y_test, y_prob)
+#     return accuracy, precision, recall, f1, roc_auc, y_pred, y_prob
 
-def find_optimal_threshold(y_true, y_prob):
-    fpr, tpr, thresholds = roc_curve(y_true, y_prob)
-    youdens_j = tpr - fpr
-    best_threshold = thresholds[np.argmax(youdens_j)]
-    return best_threshold
+# def find_optimal_threshold(y_true, y_prob):
+#     fpr, tpr, thresholds = roc_curve(y_true, y_prob)
+#     youdens_j = tpr - fpr
+#     best_threshold = thresholds[np.argmax(youdens_j)]
+#     return best_threshold
 
 # --- Main App ---
 
@@ -47,18 +47,18 @@ model_files = {
 }
 model = joblib.load(model_files[model_option])
 
-# Predict Probabilities
-accuracy_default, precision_default, recall_default, f1_default, roc_auc_default, y_test_pred_default, y_prob = evaluate_model(model, X_test, y_test, 0.5)
+# # Predict Probabilities
+# accuracy_default, precision_default, recall_default, f1_default, roc_auc_default, y_test_pred_default, y_prob = evaluate_model(model, X_test, y_test, 0.5)
 
-# Find Optimal Threshold (Youden's J)
-optimal_threshold = find_optimal_threshold(y_test, y_prob)
+# # Find Optimal Threshold (Youden's J)
+# optimal_threshold = find_optimal_threshold(y_test, y_prob)
 
-# Sidebar - Threshold Tuning
-threshold = st.sidebar.slider("Decision Threshold", 0.0, 1.0, optimal_threshold, 0.01)
-st.sidebar.markdown(f" **Recommended Optimal Threshold (Youden's J): {optimal_threshold:.2f}**")
+# # Sidebar - Threshold Tuning
+# threshold = st.sidebar.slider("Decision Threshold", 0.0, 1.0, optimal_threshold, 0.01)
+# st.sidebar.markdown(f" **Recommended Optimal Threshold (Youden's J): {optimal_threshold:.2f}**")
 
-# Evaluate with selected threshold
-accuracy, precision, recall, f1, roc_auc, y_test_pred, _ = evaluate_model(model, X_test, y_test, threshold)
+# # Evaluate with selected threshold
+# accuracy, precision, recall, f1, roc_auc, y_test_pred, _ = evaluate_model(model, X_test, y_test, threshold)
 
 # Input Form
 st.sidebar.header("Input Features")
@@ -116,23 +116,23 @@ st.table(pd.DataFrame({
     'Score': [f"{accuracy:.4f}", f"{precision:.4f}", f"{recall:.4f}", f"{f1:.4f}", f"{roc_auc:.4f}"]
 }))
 
-# Confusion Matrix
-st.subheader(" Confusion Matrix on Test Set")
-cm = confusion_matrix(y_test, y_test_pred)
-fig, ax = plt.subplots()
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=["Low Risk", "High Risk"], yticklabels=["Low Risk", "High Risk"])
-plt.xlabel("Predicted")
-plt.ylabel("True")
-st.pyplot(fig)
+# # Confusion Matrix
+# st.subheader(" Confusion Matrix on Test Set")
+# cm = confusion_matrix(y_test, y_test_pred)
+# fig, ax = plt.subplots()
+# sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=["Low Risk", "High Risk"], yticklabels=["Low Risk", "High Risk"])
+# plt.xlabel("Predicted")
+# plt.ylabel("True")
+# st.pyplot(fig)
 
-# ROC Curve
-st.subheader(" ROC Curve")
-fpr, tpr, _ = roc_curve(y_test, y_prob)
-fig2, ax2 = plt.subplots()
-ax2.plot(fpr, tpr, color='blue', label=f"ROC curve (AUC = {roc_auc_default:.2f})")
-ax2.plot([0, 1], [0, 1], color='grey', linestyle='--')
-ax2.set_xlabel("False Positive Rate")
-ax2.set_ylabel("True Positive Rate")
-ax2.set_title("Receiver Operating Characteristic (ROC)")
-ax2.legend()
-st.pyplot(fig2)
+# # ROC Curve
+# st.subheader(" ROC Curve")
+# fpr, tpr, _ = roc_curve(y_test, y_prob)
+# fig2, ax2 = plt.subplots()
+# ax2.plot(fpr, tpr, color='blue', label=f"ROC curve (AUC = {roc_auc_default:.2f})")
+# ax2.plot([0, 1], [0, 1], color='grey', linestyle='--')
+# ax2.set_xlabel("False Positive Rate")
+# ax2.set_ylabel("True Positive Rate")
+# ax2.set_title("Receiver Operating Characteristic (ROC)")
+# ax2.legend()
+# st.pyplot(fig2)
