@@ -49,36 +49,9 @@ st.title("Credit Risk Prediction Dashboard")
 # Sidebar - Settings
 st.sidebar.header("Model and Input Settings")
 model_option = st.sidebar.selectbox("Select Model", ["Random Forest", "Gradient Boosting (GBC)", "Naive Bayes", "XGBoost"])
-apply_pca = st.sidebar.checkbox("Apply PCA", value=True)
-pca_mode = st.sidebar.radio("PCA Mode", ["Manual", "Auto (95% Variance)"])
-if pca_mode == "Manual":
-    n_components = st.sidebar.slider("Number of PCA Components", min_value=2, max_value=10, value=5)
-
-# Data Split
-X = df.drop(columns=['loan_status'], axis=1)
-X = X.select_dtypes(include=[np.number])
-y = df['loan_status']
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-print("X_train shape:", X_train.shape)
-
-# Scaling
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
-
-# Apply PCA if selected
-if apply_pca:
-    if pca_mode == "Manual":
-        pca = PCA(n_components=n_components)
-    else:  # Auto (keep 95% variance)
-        pca = PCA(n_components=0.95)
-    X_train = pca.fit_transform(X_train)
-    X_test = pca.transform(X_test)
 
 # Get Model
 model = get_model(model_option)
-model.fit(X_train, y_train)
 
 # Predict Probabilities
 accuracy_default, precision_default, recall_default, f1_default, roc_auc_default, y_test_pred_default, y_prob = evaluate_model(model, X_test, y_test, 0.5)
@@ -123,10 +96,6 @@ input_data = pd.DataFrame({
     'loan_percent_income': [loan_percent_income],
     'cb_person_cred_hist_length': [cb_person_cred_hist_length],
 })
-
-input_data_scaled = scaler.transform(input_data)
-# if apply_pca:
-#     input_data_scaled = pca.transform(input_data_scaled)
 
 # Prediction
 if submit_button:
