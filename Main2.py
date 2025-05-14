@@ -96,7 +96,7 @@ input_data = pd.DataFrame({
 
 # Prediction
 if submit_button:
-    probability = model.predict_proba(input_data_scaled)
+    probability = model.predict_proba(input_data)
     prediction = (probability[:,1] >= threshold).astype(int)
 
     st.subheader("Prediction Result")
