@@ -54,9 +54,11 @@ model = joblib.load(model_files[model_option])
 # # Find Optimal Threshold (Youden's J)
 # optimal_threshold = find_optimal_threshold(y_test, y_prob)
 
-# # Sidebar - Threshold Tuning
-# threshold = st.sidebar.slider("Decision Threshold", 0.0, 1.0, optimal_threshold, 0.01)
-# st.sidebar.markdown(f" **Recommended Optimal Threshold (Youden's J): {optimal_threshold:.2f}**")
+optimal_threshold = 0.5
+
+# Sidebar - Threshold Tuning
+threshold = st.sidebar.slider("Decision Threshold", 0.0, 1.0, optimal_threshold, 0.01)
+st.sidebar.markdown(f" **Recommended Optimal Threshold (Youden's J): {optimal_threshold:.2f}**")
 
 # # Evaluate with selected threshold
 # accuracy, precision, recall, f1, roc_auc, y_test_pred, _ = evaluate_model(model, X_test, y_test, threshold)
