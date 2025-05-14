@@ -112,12 +112,12 @@ if submit_button:
     st.write(f"High Risk Probability: **{probability[0][1]*100:.2f}%**")
     st.write(f"Applied Threshold: **{threshold:.2f}**")
 
-# Show Metrics
-st.subheader(f" {model_option} Model Performance (Threshold = {threshold:.2f})")
-st.table(pd.DataFrame({
-    'Metric': ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'ROC AUC'],
-    'Score': [f"{accuracy:.4f}", f"{precision:.4f}", f"{recall:.4f}", f"{f1:.4f}", f"{roc_auc:.4f}"]
-}))
+# # Show Metrics
+# st.subheader(f" {model_option} Model Performance (Threshold = {threshold:.2f})")
+# st.table(pd.DataFrame({
+#     'Metric': ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'ROC AUC'],
+#     'Score': [f"{accuracy:.4f}", f"{precision:.4f}", f"{recall:.4f}", f"{f1:.4f}", f"{roc_auc:.4f}"]
+# }))
 
 # # Confusion Matrix
 # st.subheader(" Confusion Matrix on Test Set")
